@@ -5,34 +5,30 @@ import styles from '@/styles/Home.module.css'
 import React, { useState } from 'react';
 const inter = Inter({ subsets: ['latin'] })
 
+
+
+
+
 export default function Home() {
 
-  const [displayValue, setDisplayValue] = useState('0');
-  const [operator, setOperator] = useState(null);
-  const [operand, setOperand] = useState(null);
+  const [inputValue, setInputValue] = useState('');
 
-  const handleClick = (event) => {
-    const value = event.target.innerText;
-    if (!isNaN(value)) {
-      if (displayValue === '0') {
-        setDisplayValue(value);
-      } else {
-        setDisplayValue(displayValue + value);
-      }
-    } else if (value === '+' || value === '-') {
-      setOperator(value);
-      setOperand(displayValue);
-      setDisplayValue("0");
-    } else if (value === '=') {
-      if(!operator || !operand) return;
-      const result = eval(`${operand} ${operator} ${displayValue}`);
-      setDisplayValue(result.toString());
-      setOperator(null);
-      setOperand(null);
+  const handleClick = (value) => {
+    if(inputValue.length <= 15) {
+    setInputValue(inputValue + value);
+  }
+  };
+
+  const handleClean = () => {
+    setInputValue('');
+  };
+
+  const handleEvaluate = () => {
+    try {
+      setInputValue(eval(inputValue).toString());
+    } catch (error) {
+      setInputValue('Error');
     }
-    else if(value === 'ce'){
-      setDisplayValue('0');
-    } 
   };
 
   return (
@@ -40,35 +36,30 @@ export default function Home() {
       <Head>
         <title>Calculadora</title>
       </Head>
-
       <div className='container'>
-        <div className='calculator'>
-          <div className='display'>
-          <h1>{displayValue}</h1>
-          </div>
-          <div className='keypad'>
-            <button onClick={handleClick}>1</button>
-            <button onClick={handleClick}>2</button>
-            <button onClick={handleClick}>3</button>
-            <button onClick={handleClick}>4</button>
-            <button onClick={handleClick}>5</button>
-            <button onClick={handleClick}>6</button>
-            <button onClick={handleClick}>7</button>
-            <button onClick={handleClick}>8</button>
-            <button onClick={handleClick}>9</button>
-            <button onClick={handleClick}>0</button>
-            <button onClick={handleClick}>+</button>
-            <button onClick={handleClick}>-</button>
-            <button onClick={handleClick}>=</button>
-            <button onClick={handleClick}>ce</button>
-
-
-          </div>
+      <div className='display'>
+        <input type="textfield" value={inputValue} style={{ fontSize: inputValue.length >= 10 ? '30px' : '45px' }} />
+          <button onClick={() => handleClick('7')}>7</button>
+          <button onClick={() => handleClick('8')}>8</button>
+          <button onClick={() => handleClick('9')}>9</button>
+          <button className='operator' onClick={() => handleClick('+')}>+</button>
+          <br></br>
+          <button onClick={() => handleClick('4')}>4</button>
+          <button onClick={() => handleClick('5')}>5</button>
+          <button onClick={() => handleClick('6')}>6</button>
+          <button className='operator' onClick={() => handleClick('-')}>-</button>
+          <br></br>
+          <button onClick={() => handleClick('1')}>1</button>
+          <button onClick={() => handleClick('2')}>2</button>
+          <button onClick={() => handleClick('3')}>3</button>
+          <button className='operator' onClick={() => handleClick('*')}>X</button>
+          <br></br>
+          <button onClick={() => handleClick('0')}>0</button>
+          <button className='clean' onClick={handleClean}>C</button>
+          <button className='clean' onClick={handleEvaluate}>=</button>
+          <button className='operator' onClick={() => handleClick('/')}>/</button>
         </div>
-
       </div>
-
-
     </>
-  )
+  );
 }
